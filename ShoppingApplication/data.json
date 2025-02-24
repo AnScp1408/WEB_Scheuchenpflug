@@ -1,0 +1,99 @@
+{
+  "users": [
+    { "id": 1, "name": "Hiroshi", "email": "hiroshi@example.com" },
+    { "id": 2, "name": "Mei", "email": "mei@example.com" },
+    { "id": 3, "name": "Ravi", "email": "ravi@example.com" }
+  ],
+  "shoppingLists": [
+    {
+      "id": 1,
+      "name": "Supermarkt",
+      "ownerId": 1,
+      "participants": [1, 2],
+      "items": [
+        {
+          "id": 1,
+          "name": "Äpfel",
+          "quantity": 5,
+          "unit": "stück",
+          "category": "obst",
+          "description": "Frische Äpfel",
+          "completed": false
+        },
+        {
+          "id": 2,
+          "name": "Brot",
+          "quantity": 1,
+          "unit": "stück",
+          "category": "backwaren",
+          "description": "Vollkornbrot",
+          "completed": false
+        },
+        {
+          "id": 4,
+          "name": "Milch",
+          "quantity": 1,
+          "unit": "liter",
+          "category": "milchprodukte",
+          "description": "Frische Vollmilch",
+          "completed": false
+        },
+        {
+          "id": 5,
+          "name": "Tomaten",
+          "quantity": 6,
+          "unit": "stück",
+          "category": "gemuese",
+          "description": "Rote Strauchtomaten",
+          "completed": false
+        }
+      ],
+      "completed": false
+    },
+    {
+      "id": 2,
+      "name": "Büro",
+      "ownerId": 2,
+      "participants": [2, 3],
+      "items": [
+        {
+          "id": 3,
+          "name": "Apfel",
+          "quantity": 1,
+          "unit": "stück",
+          "category": "obst",
+          "description": "Snack-Apfel",
+          "completed": false
+        }
+      ],
+      "completed": false
+    },
+    {
+      "id": 3,
+      "name": "Zuhause",
+      "ownerId": 3,
+      "participants": [3],
+      "items": [
+        {
+          "id": 4,
+          "name": "Milch",
+          "quantity": 2,
+          "unit": "liter",
+          "category": "milchprodukte",
+          "description": "Frische Vollmilch",
+          "completed": false
+        },
+        {
+          "id": 5,
+          "name": "Reis",
+          "quantity": 1,
+          "unit": "kg",
+          "category": "sonstiges",
+          "description": "Langkornreis",
+          "completed": false
+        }
+      ],
+      "completed": false
+    }
+  ]
+}
