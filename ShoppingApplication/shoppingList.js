@@ -53,4 +53,5 @@ export class ShoppingList {
             this.participants.push(userId);
         }
     }
+    // lalalalalal
 }
