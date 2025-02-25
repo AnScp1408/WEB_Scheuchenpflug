@@ -105,7 +105,7 @@ export class ViewModal {
                         <div class="modal-body">
                             <!-- Eingabegruppe für neuen Eintrag -->
                             <div class="input-group mb-3 gap-2">
-                                <input type="text" class="form-control" placeholder="Eintrag hinzufügen" id="itemName" list="frequentItems">
+                                <input type="text" class="form-control" placeholder="Artikel hinzufügen" id="itemName" list="frequentItems">
                                 <datalist id="frequentItems">
                                     <option value="Nudeln"></option>
                                     <option value="Reis"></option>
@@ -513,7 +513,11 @@ export class ViewModal {
         const category = categoryField.value;
         const description = descriptionField.value;
 
-        if (name === '') return; // Abbruch, falls kein Name eingegeben wurde
+        if (name === ''){
+            alert("Artikel benötigt einen Namen");
+            inputField.focus();
+            return;// Abbruch, falls kein Name eingegeben wurde
+        }
 
         const newItem = {
             name: name,
