@@ -18,7 +18,8 @@
           "unit": "stück",
           "category": "obst",
           "description": "Frische Äpfel",
-          "completed": false
+          "completed": false,
+          "isVegan": true
         },
         {
           "id": 2,
@@ -27,16 +28,19 @@
           "unit": "stück",
           "category": "backwaren",
           "description": "Vollkornbrot",
-          "completed": false
+          "completed": false,
+          "isVegan": true,
+          "veganNote": "Ohne Milch und Honig"
         },
         {
           "id": 4,
-          "name": "Milch",
+          "name": "Hafermilch",
           "quantity": 1,
           "unit": "liter",
-          "category": "milchprodukte",
-          "description": "Frische Vollmilch",
-          "completed": false
+          "category": "milchalternativen",
+          "description": "Vegane Hafermilch",
+          "completed": false,
+          "isVegan": true
         },
         {
           "id": 5,
@@ -45,7 +49,8 @@
           "unit": "stück",
           "category": "gemuese",
           "description": "Rote Strauchtomaten",
-          "completed": false
+          "completed": false,
+          "isVegan": true
         }
       ],
       "completed": false
@@ -63,7 +68,18 @@
           "unit": "stück",
           "category": "obst",
           "description": "Snack-Apfel",
-          "completed": false
+          "completed": false,
+          "isVegan": true
+        },
+        {
+          "id": 6,
+          "name": "Sojajoghurt",
+          "quantity": 2,
+          "unit": "becher",
+          "category": "milchalternativen",
+          "description": "Natur Sojajoghurt",
+          "completed": false,
+          "isVegan": true
         }
       ],
       "completed": false
@@ -76,12 +92,13 @@
       "items": [
         {
           "id": 4,
-          "name": "Milch",
+          "name": "Mandelmilch",
           "quantity": 2,
           "unit": "liter",
-          "category": "milchprodukte",
-          "description": "Frische Vollmilch",
-          "completed": false
+          "category": "milchalternativen",
+          "description": "Ungesüßte Mandelmilch",
+          "completed": false,
+          "isVegan": true
         },
         {
           "id": 5,
@@ -90,7 +107,28 @@
           "unit": "kg",
           "category": "sonstiges",
           "description": "Langkornreis",
-          "completed": false
+          "completed": false,
+          "isVegan": true
+        },
+        {
+          "id": 7,
+          "name": "Tofu",
+          "quantity": 2,
+          "unit": "packungen",
+          "category": "fleischalternativen",
+          "description": "Naturtofu",
+          "completed": false,
+          "isVegan": true
+        },
+        {
+          "id": 8,
+          "name": "Avocado",
+          "quantity": 3,
+          "unit": "stück",
+          "category": "obst",
+          "description": "Reife Avocados",
+          "completed": false,
+          "isVegan": true
         }
       ],
       "completed": false
