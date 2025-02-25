@@ -16,7 +16,7 @@ export class Model {
         this.lists = [];          // Array zum Speichern aller Einkaufslisten
         this.observers = [];      // Array für Observer (z. B. Views), die bei Änderungen benachrichtigt werden
         this.currentId = 1;       // Startwert für fortlaufende eindeutige IDs
-        this.categories = ["backwaren", "fleischwaren", "milchprodukte", "obst", "gemuese", "gewuerze", "getraenke", "sonstiges"]; // Standard Kategorien
+        this.categories = ["backwaren", "milchalternativen", "obst", "gemuese", "gewuerze", "getraenke", "fleischalternativen", "sonstiges"]; // Standard Kategorien
 
     }
 
