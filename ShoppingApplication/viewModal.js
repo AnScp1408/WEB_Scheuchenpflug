@@ -109,9 +109,11 @@ export class ViewModal {
                                 <datalist id="frequentItems">
                                     <option value="Nudeln"></option>
                                     <option value="Reis"></option>
-                                    <option value="Eier"></option>
-                                    <option value="Milch"></option>
-                                    <option value="Käse"></option>
+                                    <option value="Hafermilch"></option>
+                                    <option value="Tofu"></option>
+                                    <option value="Tomaten"></option>
+                                    <option value="Paprika"></option>
+                                    <option value="Banane"></option>
                                 </datalist>
                                 <div class="d-flex gap-2">
                                     <button class="btn btn-outline-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseEntryForm" aria-expanded="false" aria-controls="collapseEntryForm">
@@ -132,6 +134,7 @@ export class ViewModal {
                                                 <option value="" selected>Einheit wählen</option>
                                                 <option value="ml">ml</option>
                                                 <option value="liter">Liter</option>
+                                                <option value="becher">Becher</option> 
                                                 <option value="g">g</option>
                                                 <option value="kg">kg</option>
                                                 <option value="dag">dag</option>
@@ -231,11 +234,13 @@ export class ViewModal {
         document.getElementById('itemName').addEventListener('change', function () {
             const enteredItem = this.value.trim();
             const frequentDefaults = {
-                "Nudeln": {unit: "kg", category: "sonstiges"},
-                "Reis": {unit: "kg", category: "sonstiges"},
-                "Eier": {unit: "stück", category: "sonstiges"},
-                "Milch": {unit: "liter", category: "milchprodukte"},
-                "Käse": {unit: "dag", category: "milchprodukte"}
+                "Nudeln": { unit: "kg", category: "sonstiges" },
+                "Reis": { unit: "kg", category: "sonstiges" },
+                "Hafermilch": { unit: "liter", category: "milchalternativen" },
+                "Tofu": { unit: "dag", category: "fleischalternativen" },
+                "Tomaten": { unit: "stück", category: "gemuese" },
+                "Paprika": { unit: "stück", category: "gemuese" },
+                "Banane": { unit: "stück", category: "obst" }
             };
             // Nur setzen, wenn ein Eintrag in den Defaults existiert:
             if (frequentDefaults[enteredItem]) {
@@ -300,11 +305,13 @@ export class ViewModal {
             let globalIndex = 0;
 
             sortedCategories.forEach(category => {
-                const categoryHeader = document.createElement('li');
-                categoryHeader.classList.add('list-group-item', 'fw-bold', 'bg-light');
-                categoryHeader.textContent = category.charAt(0).toUpperCase() + category.slice(1);
-                openItemsContainer.appendChild(categoryHeader);
-
+                const openItemsInCategory = groupedItems[category].filter(item => !item.completed);
+                if (openItemsInCategory.length > 0) {
+                    const categoryHeader = document.createElement('li');
+                    categoryHeader.classList.add('list-group-item', 'fw-bold', 'bg-light');
+                    categoryHeader.textContent = category.charAt(0).toUpperCase() + category.slice(1);
+                    openItemsContainer.appendChild(categoryHeader);
+                }
                 groupedItems[category].forEach(item => {
                     const listItem = this.createItemElement(item, globalIndex);
                     (item.completed ? completedItemsContainer : openItemsContainer).appendChild(listItem);
@@ -312,9 +319,13 @@ export class ViewModal {
                 });
             });
 
-            if (Object.keys(groupedItems).length === 0) {
+            if (openItemsContainer.innerHTML.trim() === '') {
                 openItemsContainer.innerHTML = '<li class="list-group-item text-muted">Keine offenen Items</li>';
             }
+
+            // if (Object.keys(groupedItems).length === 0) {
+            //     openItemsContainer.innerHTML = '<li class="list-group-item text-muted">Keine offenen Items</li>';
+            // }
         } else {
             // Alphabetische Sortierung
             if (this.sortOrder === "asc") {
@@ -385,6 +396,7 @@ export class ViewModal {
                         <select class="form-select edit-unit select-small">
                             <option value="ml" ${item.unit === "ml" ? "selected" : ""}>ml</option>
                             <option value="liter" ${item.unit === "liter" ? "selected" : ""}>Liter</option>
+                            <option value="becher" ${item.unit === "becher" ? "selected" : ""}>Becher</option>
                             <option value="g" ${item.unit === "g" ? "selected" : ""}>g</option>
                             <option value="kg" ${item.unit === "kg" ? "selected" : ""}>kg</option>
                             <option value="dag" ${item.unit === "dag" ? "selected" : ""}>dag</option>
