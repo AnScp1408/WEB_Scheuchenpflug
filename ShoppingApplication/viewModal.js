@@ -1,126 +1,40 @@
-/**
- * viewModal.js
- *
- * Diese Klasse verwaltet das modale Fenster (Modal), das die Details einer
- * ausgewählten Einkaufslisten anzeigt und bearbeitet. Sie übernimmt das Rendern
- * des Modals, das Anzeigen und Aktualisieren der Items innerhalb einer Liste sowie
- * die Verarbeitung von Benutzereingaben (z.B. neue Einträge hinzufügen, Items filtern,
- * sortieren, bearbeiten und Listen löschen).
- *
- * Hauptfunktionen:
- * - renderListModal(list): Rendert das Modal mit den Details der übergebenen Liste.
- *   - Schließt und entfernt ggf. bereits geöffnete Modal-Instanzen.
- *   - Fügt das Modal-HTML in den DOM ein und zeigt es über Bootstrap an.
- *   - Registriert Event-Listener für:
- *       • Schließen des Modals
- *       • Hinzufügen von Items (über zwei unterschiedliche Buttons)
- *       • Sortier- und Filteroptionen (Dropdown-Menü)
- *       • Löschen der Liste (über das Dropdown, Delegierung an den Controller)
- *       • Automatisches Setzen von Einheit und Kategorie basierend auf dem eingegebenen Artikelnamen
- *
- * - renderItems(): Rendert alle Items der aktuell ausgewählten Liste in zwei Container:
- *   einen für offene Items und einen für abgeschlossene Items. Unterstützt:
- *       • Gruppierung der Items nach Kategorien, falls der Filter "categoriess" aktiv ist.
- *       • Standardansicht, in der Items anhand ihres "completed"-Status getrennt werden.
- *       • Fallback-Meldungen, falls keine Items vorhanden sind.
- *
- * - createItemElement(item, index): Erzeugt ein DOM-Element für ein einzelnes Item.
- *   - Standardmäßig werden Name, Menge und Einheit als Text angezeigt.
- *   - Enthält zwei Buttons: Einen für das Bearbeiten (öffnet einen collapsiblen Bearbeitungsbereich)
- *     und einen zum Löschen des Items.
- *   - Im Bearbeitungsbereich (collapsed) können Name, Menge, Einheit, Kategorie und Beschreibung
- *     editiert werden. Nach dem Speichern werden die Änderungen übernommen und die Ansicht aktualisiert.
- *   - Registriert Event-Listener für:
- *       • Das Umschalten des "completed"-Status via Checkbox.
- *       • Das Löschen des Items (Delegierung an den Controller).
- *       • Das Speichern der Bearbeitungen und Schließen des Bearbeitungsbereichs.
- *
- * - addEntry(): Liest die Eingabefelder im Modal aus und erstellt einen neuen Eintrag.
- *   - Ruft die Controller-Methode addEntry() auf, um den neuen Eintrag zur aktuellen Liste hinzuzufügen.
- *   - Aktualisiert die Ansicht und setzt die Eingabefelder zurück.
- *
- * - open(): Öffnet das Modal, indem es eine neue Bootstrap-Modal-Instanz erstellt und anzeigt.
- *
- * - close(): Schließt das Modal, entfernt den Backdrop und entfernt die "modal-open"-Klasse vom Body,
- *   um die Seite wieder interaktiv zu machen.
- */
-/**
- * viewModal.js
- *
- * Diese Klasse verwaltet das modale Fenster (Modal), das die Details einer
- * ausgewählten Einkaufslisten anzeigt und bearbeitet. Sie übernimmt das Rendern
- * des Modals, das Anzeigen und Aktualisieren der Items innerhalb einer Liste sowie
- * die Verarbeitung von Benutzereingaben (z.B. neue Einträge hinzufügen, Items filtern,
- * sortieren, bearbeiten und Listen löschen).
- *
- * Zusätzlich werden hier die Kategorien dynamisch generiert – basierend auf einem
- * globalen Kategorien-Array im Model – und es wird eine Option "Neue Kategorie hinzufügen..."
- * angeboten. Wird diese Option gewählt, öffnet sich ein Prompt, in dem der Benutzer
- * eine neue Kategorie eingeben kann. Diese neue Kategorie wird dem globalen Array hinzugefügt
- * und steht anschließend in allen Dropdowns zur Verfügung.
- */
+//   Diese Klasse verwaltet das modale Fenster (Modal), das die Detailansicht einer
+//   ausgewählten Einkaufslisten anzeigt und bearbeitet. Sie ist Teil der View-Schicht im
+//   MVC-Modell und ist verantwortlich für:
+//  
+//     - Dynamisches Erzeugen und Rendern des Modal-HTMLs, basierend auf den übergebenen Listendaten.
+//     - Darstellung der Liste (Header, Items, Filter- und Sortieroptionen) im Modal.
+//     - Verwaltung von Benutzerinteraktionen im Modal, wie z.B.:
+//         • Hinzufügen von neuen Items (über einfache oder erweiterte Eingabefelder)
+//         • Bearbeiten und Löschen von Items (inklusive Toggle des "completed"-Status)
+//         • Aktualisieren von UI-Elementen (z.B. Aktualisierung des Listennamens im Modal-Header)
+//         • Dynamisches Generieren von Kategorie-Dropdown-Optionen, inklusive Option zum Anlegen
+//           neuer Kategorien.
+//     - Bereitstellen von Methoden zum Öffnen (open()) und Schließen (close()) des Modals,
+//       inklusive des Aufräumens von Backdrop-Elementen und dem Entfernen von CSS-Klassen,
+//       um den Body wieder scrollbar zu machen.
+//  
+//   Architektur (MVC):
+//     - Die ViewModal-Klasse gehört zur View und kümmert sich ausschließlich um die Darstellung
+//       und UI-bezogene Logik.
+//     - Alle datenbezogenen Änderungen (z.B. das Hinzufügen, Bearbeiten oder Löschen von Items)
+//       werden über den Controller angestoßen, der dann auf das Model zugreift.
+//  
+//   Wichtige Methoden:
+//     - renderListModal(list): Baut das Modal-HTML dynamisch auf und fügt es in den DOM ein.
+//     - renderItems(): Aktualisiert die Darstellung der Items innerhalb des Modals (aufgeteilt in offene und
+//       abgeschlossene Items), basierend auf der aktuell geladenen Liste.
+//     - createItemElement(item, index): Erstellt ein DOM-Element für ein einzelnes Item, inklusive
+//       Bearbeitungsbereich und zugehöriger Event-Listener.
+//     - addEntry(): Liest die Eingaben aus den Formularfeldern im Modal aus, erstellt ein neues Item-Objekt
+//       und löst über den Controller das Hinzufügen des Items im Model aus.
+//     - open(): Öffnet das Modal, indem eine Bootstrap-Modal-Instanz erzeugt und angezeigt wird.
+//     - close(): Schließt das Modal und räumt auf (entfernt den Backdrop und die "modal-open"-Klasse vom Body).
+//  
+//   Diese Struktur stellt sicher, dass alle UI-spezifischen Operationen sauber in der ViewModal-Klasse
+//   gekapselt sind, während die Logik im Model und die Vermittlungslogik im Controller verbleiben.
+//
 
-/**
- * viewModal.js
- *
- * Diese Klasse verwaltet das modale Fenster (Modal), das die Details einer
- * ausgewählten Einkaufslisten anzeigt und bearbeitet. Sie übernimmt das Rendern
- * des Modals, das Anzeigen und Aktualisieren der Items innerhalb einer Liste sowie
- * die Verarbeitung von Benutzereingaben (z.B. neue Einträge hinzufügen, Items filtern,
- * sortieren, bearbeiten und Listen löschen).
- *
- * Hauptfunktionen:
- * - renderListModal(list): Rendert das Modal mit den Details der übergebenen Liste.
- *   - Schließt und entfernt ggf. bereits geöffnete Modal-Instanzen.
- *   - Fügt das Modal-HTML in den DOM ein und zeigt es über Bootstrap an.
- *   - Registriert Event-Listener für:
- *       • Schließen des Modals
- *       • Hinzufügen von Items (über zwei unterschiedliche Buttons)
- *       • Sortier- und Filteroptionen (Dropdown-Menü)
- *       • Löschen der Liste (über das Dropdown, Delegierung an den Controller)
- *       • Automatisches Setzen von Einheit und Kategorie basierend auf dem eingegebenen Artikelnamen
- *
- * - renderItems(): Rendert alle Items der aktuell ausgewählten Liste in zwei Container:
- *   einen für offene Items und einen für abgeschlossene Items. Unterstützt:
- *       • Gruppierung der Items nach Kategorien, falls der Filter "categoriess" aktiv ist.
- *       • Standardansicht, in der Items anhand ihres "completed"-Status getrennt werden.
- *       • Fallback-Meldungen, falls keine Items vorhanden sind.
- *
- * - createItemElement(item, index): Erzeugt ein DOM-Element für ein einzelnes Item.
- *   - Standardmäßig werden Name, Menge und Einheit als Text angezeigt.
- *   - Enthält zwei Buttons: Einen für das Bearbeiten (öffnet einen collapsiblen Bearbeitungsbereich)
- *     und einen zum Löschen des Items.
- *   - Im Bearbeitungsbereich (collapsed) können Name, Menge, Einheit, Kategorie und Beschreibung
- *     editiert werden. Nach dem Speichern werden die Änderungen übernommen und die Ansicht aktualisiert.
- *   - Registriert Event-Listener für:
- *       • Das Umschalten des "completed"-Status via Checkbox.
- *       • Das Löschen des Items (Delegierung an den Controller).
- *       • Das Speichern der Bearbeitungen und Schließen des Bearbeitungsbereichs.
- *
- * - addEntry(): Liest die Eingabefelder im Modal aus und erstellt einen neuen Eintrag.
- *   - Ruft die Controller-Methode addEntry() auf, um den neuen Eintrag zur aktuellen Liste hinzuzufügen.
- *   - Aktualisiert die Ansicht und setzt die Eingabefelder zurück.
- *
- * - open(): Öffnet das Modal, indem es eine neue Bootstrap-Modal-Instanz erstellt und anzeigt.
- *
- * - close(): Schließt das Modal, entfernt den Backdrop und entfernt die "modal-open"-Klasse vom Body,
- *   um die Seite wieder interaktiv zu machen.
- */
-/**
- * viewModal.js
- *
- * Diese Klasse verwaltet das modale Fenster (Modal), das die Details einer
- * ausgewählten Einkaufslisten anzeigt und bearbeitet. Sie übernimmt das Rendern
- * des Modals, das Anzeigen und Aktualisieren der Items innerhalb einer Liste sowie
- * die Verarbeitung von Benutzereingaben (z.B. neue Einträge hinzufügen, Items filtern,
- * sortieren, bearbeiten und Listen löschen).
- *
- * Zusätzlich werden hier die Kategorien dynamisch generiert – basierend auf einem
- * globalen Kategorien-Array im Model – und es wird eine Option "Neue Kategorie hinzufügen..."
- * angeboten. Wird diese Option gewählt, öffnet sich ein Prompt, in dem der Benutzer
- * eine neue Kategorie eingeben kann. Diese neue Kategorie wird dem globalen Array hinzugefügt
- * und steht anschließend in allen Dropdowns zur Verfügung.
- */
 export class ViewModal {
     constructor(controller) {
         this.controller = controller; // Referenz zum Controller, um Aktionen weiterzuleiten
@@ -131,22 +45,27 @@ export class ViewModal {
     }
 
 
-    // Generiert die HTML-Optionen für das Kategorie-Dropdown.
+    //////////////////
+    ////// Generiert die HTML-Optionen für das Kategorie-Dropdown.
+    //////////////////
 
     generateCategoryOptions(selectedCategory) {
-        // Hole das globale Kategorien-Array aus dem Model
+        // Holt Kategorien-Array aus dem Model
         const categories = this.controller.model.categories;
         let optionsHTML = "";
         categories.forEach(cat => {
             // Setze "selected", wenn der aktuelle Wert passt
             optionsHTML += `<option value="${cat}" ${selectedCategory && selectedCategory.toLowerCase() === cat ? "selected" : ""}>${cat.charAt(0).toUpperCase() + cat.slice(1)}</option>`;
         });
-        // Füge die Option zum Hinzufügen einer neuen Kategorie hinzu
+        //Option zum Hinzufügen einer neuen Kategorie hinzu
         optionsHTML += `<option value="new">Neue Kategorie hinzufügen...</option>`;
         return optionsHTML;
     }
 
-    // Rendert das Modal mit den Details der übergebenen Liste.
+    //////////////////
+    ////// Rendert Details der übergebenen Liste.
+    //////////////////
+
     renderListModal(list) {
         // Speichere die Referenz zur aktuellen Liste
         this.currentList = list;
@@ -159,115 +78,116 @@ export class ViewModal {
             }
             this.modalElement.remove();
         }
-
         // Generiere dynamisch die Options für die Kategorie im "Erweiterten Eingabefeld"
         const categoryOptions = this.generateCategoryOptions("");
 
-        // Erstelle das Modal-HTML; hier wird der Kategorie-Dropdown dynamisch generiert
+        // Erstelle das Modal-HTML; Kategorie-Dropdown dynamisch
         const modalHTML = `
-    <div class="modal fade" id="listModal" tabindex="-1" aria-labelledby="listModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <!-- Modal-Header: Zeigt den Listennamen und Dropdown-Aktionen -->
-                <div class="modal-header d-flex justify-content-between align-items-center w-100">
-                    <h5 class="modal-title text-center flex-grow-1" id="listModalLabel">${list.name}</h5>
-                    <div class="dropdown">
-                        <button class="btn btn-outline-secondary" type="button" data-bs-toggle="dropdown">
-                            <i class="bi bi-three-dots"></i>
-                        </button>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item rename-list" href="#" data-id="${list.id}">Name ändern</a></li>
-                            <li><a class="dropdown-item participants-list" href="#" data-id="${list.id}">Liste teilen <i class="bi bi-share"></i></a></li>
-                            <li><a class="dropdown-item delete-list text-danger" href="#" data-id="${list.id}">Liste löschen <i class="bi bi-trash3"></i></a></li>
-                        </ul>
-                    </div>
-                </div>
-
-                <!-- Modal-Body -->
-                <div class="modal-body">
-                    <!-- Eingabegruppe für neuen Eintrag -->
-                    <div class="input-group mb-3 gap-2">
-                        <input type="text" class="form-control" placeholder="Eintrag hinzufügen" id="itemName" list="frequentItems">
-                        <datalist id="frequentItems">
-                            <option value="Nudeln"></option>
-                            <option value="Reis"></option>
-                            <option value="Eier"></option>
-                            <option value="Milch"></option>
-                            <option value="Käse"></option>
-                        </datalist>
-                        <div class="d-flex gap-2">
-                            <button class="btn btn-outline-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseEntryForm" aria-expanded="false" aria-controls="collapseEntryForm">
-                                <i class="bi bi-caret-down-fill"></i>
-                            </button>
-                            <button class="btn btn-outline-primary" type="button" id="addEntryButton"><i class="bi bi-cart-plus"></i></button>
+            <div class="modal fade" id="listModal" tabindex="-1" aria-labelledby="listModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <!-- Modal-Header: Zeigt den Listennamen und Dropdown-Aktionen -->
+                        <div class="modal-header d-flex justify-content-between align-items-center w-100">
+                            <h5 class="modal-title text-center flex-grow-1" id="listModalLabel">${list.name}</h5>
+                            <div class="dropdown">
+                                <button class="btn btn-outline-secondary" type="button" data-bs-toggle="dropdown">
+                                    <i class="bi bi-three-dots"></i>
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item rename-list" href="#" data-id="${list.id}">Name ändern</a></li>
+                                    <li><a class="dropdown-item participants-list" href="#" data-id="${list.id}">Liste teilen <i class="bi bi-share"></i></a></li>
+                                    <li><a class="dropdown-item delete-list text-danger" href="#" data-id="${list.id}">Liste löschen <i class="bi bi-trash3"></i></a></li>
+                                </ul>
+                            </div>
                         </div>
-                    </div>
-
-                    <!-- Erweiterte Eingabefelder (collapsed) -->
-                    <div class="collapse mb-3" id="collapseEntryForm">
-                        <div class="card card-body">
-                            <div class="mb-2">
-                                <label for="entryQuantity" class="form-label">Menge</label>
-                                <div class="input-group">
-                                    <input type="number" id="entryQuantity" class="form-control" placeholder="Zahl">
-                                    <select class="form-select w-auto" id="entryUnit">
-                                        <option value="" selected>Einheit wählen</option>
-                                        <option value="ml">ml</option>
-                                        <option value="liter">Liter</option>
-                                        <option value="g">g</option>
-                                        <option value="kg">kg</option>
-                                        <option value="dag">dag</option>
-                                        <option value="stück">Stück</option>
-                                    </select>
+        
+                        <!-- Modal-Body -->
+                        <div class="modal-body">
+                            <!-- Eingabegruppe für neuen Eintrag -->
+                            <div class="input-group mb-3 gap-2">
+                                <input type="text" class="form-control" placeholder="Eintrag hinzufügen" id="itemName" list="frequentItems">
+                                <datalist id="frequentItems">
+                                    <option value="Nudeln"></option>
+                                    <option value="Reis"></option>
+                                    <option value="Eier"></option>
+                                    <option value="Milch"></option>
+                                    <option value="Käse"></option>
+                                </datalist>
+                                <div class="d-flex gap-2">
+                                    <button class="btn btn-outline-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseEntryForm" aria-expanded="false" aria-controls="collapseEntryForm">
+                                        <i class="bi bi-caret-down-fill"></i>
+                                    </button>
+                                    <button class="btn btn-outline-primary" type="button" id="addEntryButton"><i class="bi bi-cart-plus"></i></button>
                                 </div>
                             </div>
-
-                            <div class="mb-2">
-                                <label for="entryCategory" class="form-label">Kategorie</label>
-                                <select class="form-select w-auto" id="entryCategory">
-                                    ${categoryOptions}
-                                </select>
+        
+                            <!-- Erweiterte Eingabefelder (collapsed) -->
+                            <div class="collapse mb-3" id="collapseEntryForm">
+                                <div class="card card-body">
+                                    <div class="mb-2">
+                                        <label for="entryQuantity" class="form-label">Menge</label>
+                                        <div class="input-group">
+                                            <input type="number" id="entryQuantity" class="form-control" placeholder="Zahl">
+                                            <select class="form-select w-auto" id="entryUnit">
+                                                <option value="" selected>Einheit wählen</option>
+                                                <option value="ml">ml</option>
+                                                <option value="liter">Liter</option>
+                                                <option value="g">g</option>
+                                                <option value="kg">kg</option>
+                                                <option value="dag">dag</option>
+                                                <option value="stück">Stück</option>
+                                            </select>
+                                        </div>
+                                    </div>
+        
+                                    <!-- Kategorie-Dropdown dynamisch -->
+                                    <div class="mb-2">
+                                        <label for="entryCategory" class="form-label">Kategorie</label>
+                                        <select class="form-select select-small" id="entryCategory">
+                                            ${categoryOptions}
+                                        </select>
+                                    </div>
+        
+                                    <div class="mb-2">
+                                        <label for="entryDescription" class="form-label">Beschreibung</label>
+                                        <textarea id="entryDescription" class="form-control" placeholder="Beschreibung hinzufügen"></textarea>
+                                    </div>
+        
+                                    <button class="btn btn-success w-100" id="addEntryBtnExtended">Hinzufügen <i class="bi bi-cart-plus"></i></button>
+                                    <input type="hidden" id="selectedCategory">
+                                </div>
                             </div>
-
-                            <div class="mb-2">
-                                <label for="entryDescription" class="form-label">Beschreibung</label>
-                                <textarea id="entryDescription" class="form-control" placeholder="Beschreibung hinzufügen"></textarea>
+        
+                            <!-- Filteroptionen -->
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                            <h6 class="mb-0">Offene Items</h6>
+                                <div class="dropdown">
+                                    <button class="btn btn-outline-primary dropdown-toggle" type="button" id="filterDropdown" data-bs-toggle="dropdown">
+                                        Filter <i class="bi bi-funnel"></i>
+                                    </button>
+                                    <ul class="dropdown-menu dropdown-menu-end">
+                                        <li><a class="dropdown-item filter-option" data-filter="all" href="#">Alle</a></li>
+                                        <li><a class="dropdown-item filter-option" data-filter="categoriess" href="#">Kategorien <i class="bi bi-tag"></i></a></li>
+                                        <li><a class="dropdown-item sort-option" data-sort="asc" href="#"><i class="bi bi-sort-alpha-down"></i></a></li>
+                                        <li><a class="dropdown-item sort-option" data-sort="desc" href="#"><i class="bi bi-sort-alpha-down-alt"></i></a></li>
+                                    </ul>
+                                </div>
                             </div>
+        
+                            <!-- Container für Items -->
 
-                            <button class="btn btn-success w-100" id="addEntryBtnExtended">Hinzufügen <i class="bi bi-cart-plus"></i></button>
-                            <input type="hidden" id="selectedCategory">
+                            <ul id="openItems" class="list-group mb-3"></ul>
+                            <h6>Abgeschlossene Items</h6>
+                            <ul id="completedItems" class="list-group text-muted"></ul>
+                        </div>
+        
+                        <!-- Modal Footer -->
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="closeModalBtn">Schließen <i class="bi bi-x-lg"></i></button>
                         </div>
                     </div>
-
-                    <!-- Filter- und Sortieroptionen -->
-                    <div class="d-flex justify-content-between align-items-center mb-2">
-                        <div class="dropdown">
-                            <button class="btn btn-outline-primary dropdown-toggle" type="button" id="filterDropdown" data-bs-toggle="dropdown">
-                                Filter <i class="bi bi-funnel"></i>
-                            </button>
-                            <ul class="dropdown-menu dropdown-menu-end">
-                                <li><a class="dropdown-item filter-option" data-filter="all" href="#">Alle</a></li>
-                                <li><a class="dropdown-item filter-option" data-filter="categoriess" href="#">Kategorien <i class="bi bi-tag"></i></a></li>
-                                <li><a class="dropdown-item sort-option" data-sort="asc" href="#"><i class="bi bi-sort-alpha-down"></i></a></li>
-                                <li><a class="dropdown-item sort-option" data-sort="desc" href="#"><i class="bi bi-sort-alpha-down-alt"></i></a></li>
-                            </ul>
-                        </div>
-                    </div>
-
-                    <!-- Container für Items -->
-                    <h6>Offene Items</h6>
-                    <ul id="openItems" class="list-group mb-3"></ul>
-                    <h6>Abgeschlossene Items</h6>
-                    <ul id="completedItems" class="list-group text-muted"></ul>
                 </div>
-
-                <!-- Modal Footer -->
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="closeModalBtn">Schließen</button>
-                </div>
-            </div>
-        </div>
-    </div>`;
+            </div>`;
 
 
         // Füge das Modal in den DOM ein und speichere die Referenz
@@ -291,7 +211,7 @@ export class ViewModal {
         document.getElementById('addEntryButton').addEventListener('click', () => this.addEntry());
         document.getElementById('addEntryBtnExtended').addEventListener('click', () => this.addEntry());
 
-        // Registriere Event-Listener für Sortier- und Filteroptionen
+        // Registriere Event-Listener für Filteroptionen
         document.querySelectorAll(".sort-option").forEach(option => {
             option.addEventListener("click", (event) => {
                 event.preventDefault();
@@ -306,8 +226,6 @@ export class ViewModal {
                 this.renderItems();
             });
         });
-
-
 
         // Automatisches Setzen von Einheit und Kategorie basierend auf dem eingegebenen Artikelnamen
         document.getElementById('itemName').addEventListener('change', function () {
@@ -355,7 +273,10 @@ export class ViewModal {
         })
     }
 
-    // Rendert alle Items der aktuellen Liste
+    //////////////////
+    ////// Rendert alle Items der aktuellen Liste
+    //////////////////
+
     renderItems() {
         const openItemsContainer = document.getElementById('openItems');
         const completedItemsContainer = document.getElementById('completedItems');
@@ -395,7 +316,7 @@ export class ViewModal {
                 openItemsContainer.innerHTML = '<li class="list-group-item text-muted">Keine offenen Items</li>';
             }
         } else {
-            // Alphabetische Sortierung der Items basierend auf sortOrder
+            // Alphabetische Sortierung
             if (this.sortOrder === "asc") {
                 // Kopie des Arrays erstellen und alphabetisch A-Z sortieren
                 items = items.slice().sort((a, b) => a.name.localeCompare(b.name));
@@ -420,7 +341,10 @@ export class ViewModal {
         }
     }
 
-    // Erstellt ein DOM-Element für ein einzelnes Item
+    //////////////////
+    ////// Erstellt das Collapse für ein einzelnes Item
+    //////////////////
+
     createItemElement(item, index) {
         const listItem = document.createElement('div');
         listItem.classList.add('mb-2');
@@ -444,7 +368,7 @@ export class ViewModal {
             </div>
         </li>
 
-        <!-- Editierbereich (initial collapsed) -->
+        <!-- Editierbereich (grundsätzlich collapsed) -->
         <div class="collapse" id="editForm-${index}">
             <div class="card card-body mt-2">
                 <div class="row g-2">
@@ -458,7 +382,7 @@ export class ViewModal {
                     </div>
                     <div class="col-6">
                         <label class="form-label">Einheit</label>
-                        <select class="form-select edit-unit">
+                        <select class="form-select edit-unit select-small">
                             <option value="ml" ${item.unit === "ml" ? "selected" : ""}>ml</option>
                             <option value="liter" ${item.unit === "liter" ? "selected" : ""}>Liter</option>
                             <option value="g" ${item.unit === "g" ? "selected" : ""}>g</option>
@@ -469,7 +393,7 @@ export class ViewModal {
                     </div>
                     <div class="col-12">
                         <label class="form-label">Kategorie</label>
-                        <select class="form-select edit-category">
+                        <select class="form-select edit-category select-small">
                             ${editCategoryOptions}
                         </select>
                     </div>
@@ -478,14 +402,14 @@ export class ViewModal {
                         <textarea class="form-control edit-description">${item.description}</textarea>
                     </div>
                     <div class="col-12 d-grid">
-                        <button class="btn btn-success save-edit">Speichern</button>
+                        <button class="btn btn-success save-edit">Speichern <i class="bi bi-floppy"></i></button>
                     </div>
                 </div>
             </div>
         </div>
     `;
 
-        // ✅ Checkbox-Event: Umschalten des "completed"-Status und Neurendern
+        // Checkbox-Event: Umschalten des "completed"-Status und Neurendern
         const checkbox = listItem.querySelector("input[type='checkbox']");
         checkbox.addEventListener("change", () => {
             item.completed = checkbox.checked;
@@ -493,13 +417,26 @@ export class ViewModal {
             this.renderItems();
         });
 
-        // ✅ Löschen-Event
+        // Löschen-Event
         listItem.querySelector(".delete-item").addEventListener("click", () => {
-            this.controller.deleteItem(this.currentList.id, index);
-            setTimeout(() => this.renderItems(), 100);
+            // Bestätigungsabfrage – nur hier
+            if (confirm("Möchtest du diesen Artikel wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.")) {
+                // Rufe zuerst die Controller-Methode auf, um den Datensatz zu löschen
+                this.controller.deleteItem(this.currentList.id, index);
+
+                // Danach starte die Animation für das DOM-Element
+                listItem.classList.add("delete-animation");
+
+                // Sobald die Transition endet, aktualisiere die Ansicht
+                listItem.addEventListener("transitionend", function handler() {
+                    listItem.removeEventListener("transitionend", handler);
+                    this.renderItems();
+                }.bind(this));
+            }
         });
 
-        // ✅ Speichern-Event
+
+        // Speichern-Event
         listItem.querySelector(".save-edit").addEventListener("click", () => {
             const editedName = listItem.querySelector(".edit-name").value;
             const editedQuantity = listItem.querySelector(".edit-quantity").value;
@@ -523,7 +460,7 @@ export class ViewModal {
             this.renderItems();
         });
 
-        // ✅ Kategorie-Hinzufügen im Editierbereich
+        // Kategorie-Hinzufügen im Editierbereich
         const editCategorySelect = listItem.querySelector(".edit-category");
         editCategorySelect.addEventListener("change", () => {
             if (editCategorySelect.value === "new") {
@@ -551,8 +488,10 @@ export class ViewModal {
         return listItem;
     }
 
+    //////////////////
+    ////// Fügt einen neuen Eintrag zur aktuellen Liste hinzu
+    //////////////////
 
-    // Fügt einen neuen Eintrag zur aktuellen Liste hinzu
     addEntry() {
         const inputField = document.querySelector('#listModal #itemName');
         const quantityField = document.querySelector('#listModal #entryQuantity');
@@ -599,6 +538,9 @@ export class ViewModal {
         descriptionField.value = '';
     }
 
+    //////////////////
+    ////// Öffnen und schließen des Modals
+    //////////////////
 
     // Öffnet das Modal, indem eine neue Bootstrap-Modal-Instanz erstellt und angezeigt wird
     open() {
@@ -618,5 +560,6 @@ export class ViewModal {
         }
         document.body.classList.remove('modal-open');
     }
+
 }
 
