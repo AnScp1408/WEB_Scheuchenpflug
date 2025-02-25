@@ -1,132 +1,90 @@
-//
-//   Controller.js
-//
-//   Diese Controller-Klasse vermittelt zwischen Model und View/ViewModal und steuert
-//   die Hauptlogik der Applikation. Sie enthält Methoden zum Erstellen, Öffnen,
-//   Bearbeiten, Löschen und Aktualisieren von Einkaufslisten sowie zum Verwalten
-//   von Listeneinträgen.
-//
-//   Hauptfunktionen:
-//   - Initialisiert das Model, die View und die ViewModal und registriert die View als Observer im Model.
-//   - Verarbeitet Benutzeraktionen (z.B. Listen hinzufügen, öffnen, umbenennen, abschließen, wieder öffnen)
-//     und leitet diese an das Model weiter.
-//   - Aktualisiert die Ansicht, indem es nach Änderungen im Model die Observer benachrichtigt.
-//
-//   Methoden:
-//
-//   constructor(model, view, viewModal)
-//     - Speichert die übergebenen Instanzen von Model, View und ViewModal.
-//     - Registriert die View als Observer im Model, sodass sie bei Modelländerungen aktualisiert wird.
-//     - Fügt Event-Listener für die Erstellung neuer Listen hinzu.
-//
-//   showAddListModal()
-//     - Zeigt das Modal zum Erstellen einer neuen Liste an.
-//
-//   createList()
-//     - Liest den neuen Listennamen aus dem Eingabefeld und fügt über das Model eine neue Liste hinzu.
-//     - Schließt anschließend das Modal.
-//
-//   renameList(listId)
-//     - Sucht die Liste im Model anhand der ID und öffnet ein Prompt, um einen neuen Namen einzugeben.
-//     - Aktualisiert den Namen der Liste, falls eine gültige Eingabe erfolgt, und benachrichtigt die Observer.
-//
-//   deleteList(listId)
-//     - Fragt den Benutzer nach einer Bestätigung zum Löschen.
-//     - Löscht die Liste aus dem Model, schließt und entfernt das zugehörige Modal,
-//       entfernt eventuelle Backdrop-Elemente und aktualisiert die Ansicht.
-//
-//   openList(listId)
-//     - Sucht die Liste im Model anhand der ID.
-//     - Rendert das Listen-Detail im Modal (über die ViewModal-Klasse) und öffnet dieses Modal.
-//
-//   addEntry(listId, newItem)
-//     - Fügt der Liste (identifiziert durch listId) einen neuen Eintrag (newItem) hinzu.
-//     - Benachrichtigt die Observer, um die Ansicht zu aktualisieren.
-//
-//   updateItem(listId, itemIndex, updatedData)
-//     - Aktualisiert einen bestehenden Eintrag in einer Liste, indem die Daten des Items mit den neuen Werten überschrieben werden.
-//     - Benachrichtigt die Observer.
-//
-//   deleteItem(listId, itemIndex)
-//     - Fragt den Benutzer nach einer Bestätigung zum Löschen eines Eintrags.
-//     - Löscht den Eintrag an der angegebenen Position (itemIndex) in der Liste und aktualisiert die Ansicht.
-//
-//   markListComplete(listId)
-//     - Markiert die gesamte Liste als abgeschlossen und benachrichtigt die Observer.
-//
-//   markListActive(listId)
-//     - Markiert eine abgeschlossene Liste wieder als aktiv und benachrichtigt die Observer.
-//
-//   markListIfComplete(listId)
-//     - Überprüft, ob alle Einträge einer Liste als abgeschlossen markiert sind.
-//     - Setzt den Status der Liste entsprechend (abgeschlossen oder nicht) und benachrichtigt die Observer.
-//
-//   reopenList(listId)
-//     - Setzt eine abgeschlossene Liste wieder als aktiv, indem sie den Listenstatus auf "nicht abgeschlossen" setzt
-//       und alle Einträge auf "unchecked" zurücksetzt.
-//     - Benachrichtigt die Observer zur Aktualisierung der Ansicht.
-//
+//   Diese Klasse stellt den Vermittler zwischen Model, View und ViewModal dar und implementiert
+//   die Hauptlogik der Shopping-App. Sie verarbeitet alle Benutzeraktionen (z. B. Listen erstellen,
+//   öffnen, bearbeiten, löschen und Item-Operationen) und ruft dabei entsprechende Methoden im Model auf.
+//  
+//   Hauptaufgaben:
+//     - Initialisierung der Kernkomponenten (Model, View, ViewModal)
+//     - Registrierung der View als Observer im Model, sodass sie bei Datenänderungen aktualisiert wird.
+//     - Verarbeitung von Benutzerinteraktionen (z. B. Klick auf "Liste hinzufügen", "Liste öffnen", "Item löschen")
+//     - Delegierung von UI-bezogenen Operationen an die ViewModal-Klasse (z. B. Modal öffnen/schließen)
+//     - Aufruf von Model-Methoden zur Durchführung der Datenmanipulationen (CRUD-Operationen, Statusänderungen)
+//  
+//   der Controller bleibt schlank und übernimmt ausschließlich die Vermittlungslogik, während das Model die Daten und
+//   Geschäftslogik und die View (inklusive ViewModal) die Darstellung und UI-Interaktionen übernimmt.
 
 export class Controller {
     constructor(model, view, viewModal) {
-        this.model = model;
-        this.view = view;
-        this.viewModal = viewModal;
+        this.model = model;  // Referenz zum Model (Daten, Logik)
+        this.view = view; // Referenz zur View (Hauptansicht der App)
+        this.viewModal = viewModal; // Referenz zur ViewModal (Modal für Listendetails)
 
-        // Observer-Pattern: Die View wird über Änderungen im Model informiert.
+        // Registriert die View und wird über Änderungen im Model informiert.
         this.model.addObserver(this.view);
 
-        // Event-Listener für den "Liste hinzufügen"-Button.
+        // Event-Listener für UI Interaktionen in Listenübersicht
         document.getElementById('addListButton').addEventListener('click', () => this.showAddListModal());
         document.getElementById('createListBtn').addEventListener('click', () => this.createList());
     }
 
-    // Zeigt das Modal zum Erstellen einer neuen Liste an.
+    //////////////////
+    ////// LISTEN:
+    ////// - hinzufügen (Modal öffnen zum adden)
+    ////// - erstellen
+    ////// - umbenennen
+    ////// - löschen
+    ////// - generell öffnen viewModal
+    ////// - abschließen
+    ////// - abgeschlossen?
+    ////// - wieder öffnen
+    ////// - teilen
+    //////////////////
+
     showAddListModal() {
+        const inputField = document.getElementById('listNameInput');
+        if (inputField) {
+            inputField.value = "";
+        }
         const modal = new bootstrap.Modal(document.getElementById('newListModal'));
         modal.show();
     }
 
-    // Liest den Namen aus dem Eingabefeld und erstellt über das Model eine neue Liste.
     createList() {
         const listName = document.getElementById('listNameInput').value;
-        if (listName) {
+        if (listName.trim() !== "") {
             this.model.addList(listName);
             const modal = bootstrap.Modal.getInstance(document.getElementById('newListModal'));
             modal.hide();
+        } else {
+            alert("Bitte einen gültigen Namen für die Liste eingeben");
         }
     }
 
-    // Ändert den Namen einer bestehenden Liste.
     renameList(listId) {
-        // Suche die Liste im Modell.
-        const list = this.model.lists.find(l => l.id == listId);
+        const list = this.model.getListById(listId);
         if (list) {
-            // Öffne ein Prompt, um einen neuen Namen einzugeben.
-            const newName = prompt("Bitte neuen Namen eingeben:", list.name);
+            const newName = prompt("Neuer Name:", list.name);
             if (newName && newName.trim() !== "") {
-                list.name = newName.trim();
+                // Aktualisiere die Liste im Model
+                this.model.renameList(listId, newName.trim());
+                // Benachrichtige die Observer (die View wird aktualisiert)
                 this.model.notifyObservers();
-
-                // Wenn das Modal offen ist, aktualisiere den Header direkt:
+                // Aktualisiere den Header im geöffneten Modal, falls offen
                 if (this.viewModal && this.viewModal.modalElement) {
                     const headerEl = this.viewModal.modalElement.querySelector('#listModalLabel');
                     if (headerEl) {
-                        headerEl.textContent = list.name;
+                        headerEl.textContent = newName.trim();
                     }
                 }
+            } else {
+                console.error("Liste mit ID " + listId + " nicht gefunden!");
             }
-        } else {
-            console.error("Liste mit ID " + listId + " nicht gefunden!");
         }
     }
 
-
-    // Löscht eine Liste, nachdem der Benutzer dies bestätigt hat.
     deleteList(listId) {
         if (confirm("Möchtest du diese Liste wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.")) {
             console.log("Liste wird gelöscht mit ID:", listId);
-            // Lösche die Liste im Modell.
+            // Lösche die Liste im Model.
             this.model.deleteList(listId);
 
             // Schließe und entferne das Modal vollständig.
@@ -146,168 +104,82 @@ export class Controller {
                 backdrop.remove();
             }
 
-            // Setze die Body-Klasse zurück, damit Scrollbars wieder freigegeben werden.
+            // Setze die Body-Klasse zurück und entferne eventuell gesetzte Inline-Stile, damit Scrollbars wieder freigegeben werden.
             document.body.classList.remove('modal-open');
+            document.body.style.overflow = '';
+            document.body.style.paddingRight = '';
 
             // Aktualisiere die Ansicht.
             this.model.notifyObservers();
         }
     }
 
-    // Öffnet eine Liste, indem das entsprechende Modal mit den Listendetails gerendert wird.
     openList(listId) {
-        const list = this.model.lists.find(list => list.id == listId);
+        const list = this.model.getListById(listId);
         if (list) {
-            console.log("Öffne Modal für Liste ID:", listId);
-            this.viewModal.renderListModal(list); // Rendert das Modal mit den Items der Liste.
-            this.viewModal.open(); // Öffnet das Modal.
+            this.viewModal.renderListModal(list);
+            this.viewModal.open();
+
         } else {
-            console.error("Liste nicht gefunden");
+            console.error("Liste wurde nicht gefunden");
         }
     }
 
-    // Fügt einen neuen Eintrag zu einer Liste hinzu.
-    addEntry(listId, newItem) {
-        const list = this.model.lists.find(l => l.id == listId);
-        if (list) {
-            list.items.push(newItem);
-            // Benachrichtige die Observer, um die View zu aktualisieren.
-            this.model.notifyObservers();
-        } else {
-            console.error("Liste nicht gefunden!");
-        }
-    }
-
-    // Aktualisiert einen Eintrag in einer Liste mit neuen Daten.
-    updateItem(listId, itemIndex, updatedData) {
-        const list = this.model.lists.find(l => l.id == listId);
-        if (list && list.items[itemIndex] !== undefined) {
-            // Überschreibt die vorhandenen Daten des Items mit den neuen Werten.
-            list.items[itemIndex] = { ...list.items[itemIndex], ...updatedData };
-            this.model.notifyObservers();
-        } else {
-            console.error("Liste oder Item nicht gefunden!");
-        }
-    }
-
-    // Löscht einen Eintrag aus einer Liste nach Bestätigung durch den Benutzer.
-    deleteItem(listId, itemIndex) {
-        if (confirm("Möchtest du diesen Artikel wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.")) {
-            console.log("Bestätigung erhalten. listId:", listId, "itemIndex:", itemIndex);
-            const list = this.model.lists.find(l => l.id == listId);
-            console.log("Gefundene Liste:", list);
-            if (list && list.items[itemIndex] !== undefined) {
-                console.log("Lösche Artikel:", list.items[itemIndex]);
-                list.items.splice(itemIndex, 1);
-                this.model.notifyObservers();
-            } else {
-                console.error("Liste oder Item nicht gefunden!");
-            }
-        }
-    }
-
-// Markiert eine Liste als abgeschlossen.
     markListComplete(listId) {
-        const list = this.model.lists.find(l => l.id == listId);
-        if (list) {
-            list.completed = true;
-            // Setze alle Items in der Liste auf abgeschlossen (true)
-            list.items.forEach(item => item.completed = true);
-
-            this.model.notifyObservers();
-
-            // ✅ Aktualisiere das Modal direkt, wenn es offen ist
-            if (this.viewModal && this.viewModal.modalElement) {
-                this.viewModal.renderItems(); // Nur Items neu rendern
-            }
-        } else {
-            console.error("Liste mit ID " + listId + " nicht gefunden!");
+        this.model.markListComplete(listId);
+        if (this.viewModal && this.viewModal.modalElement) {
+            this.viewModal.renderItems();
         }
     }
 
-    // // Setzt eine abgeschlossene Liste wieder auf aktiv.
-    // markListActive(listId) {
-    //     const list = this.model.lists.find(l => l.id == listId);
-    //     if (list) {
-    //         list.completed = false;
-    //         this.model.notifyObservers();
-    //     } else {
-    //         console.error("Liste mit ID " + listId + " nicht gefunden!");
-    //     }
-    // }
-
-    // Überprüft, ob alle Items in einer Liste abgeschlossen sind, und aktualisiert den Listenstatus entsprechend.
     markListIfComplete(listId) {
-        const list = this.model.lists.find(l => l.id == listId);
-        if (list) {
-            const allCompleted = list.items.length > 0 && list.items.every(item => item.completed);
-            list.completed = allCompleted;
-            this.model.notifyObservers();
-        }
+        this.model.markListIfComplete(listId);
     }
 
-// Setzt eine abgeschlossene Liste wieder auf aktiv, indem sie alle Items wieder auf "nicht abgeschlossen" setzt.
     reopenList(listId) {
-        const list = this.model.lists.find(l => l.id == listId);
-        if (list) {
-            list.completed = false;
-            // Setze alle Items in der Liste auf "nicht abgeschlossen" (false)
-            list.items.forEach(item => {
-                item.completed = false;
-                console.log(`Item ${item.id} (${item.name}) set to completed: ${item.completed}`);
-            });
-
-            this.model.notifyObservers();
-
-            // ✅ Aktualisiere das Modal direkt, wenn es offen ist
-            if (this.viewModal && this.viewModal.modalElement) {
-                this.viewModal.renderItems(); // Nur Items neu rendern
-            }
-        } else {
-            console.error("Liste nicht gefunden");
+        this.model.reopenList(listId);
+        if (this.viewModal && this.viewModal.modalElement) {
+            this.viewModal.renderItems();
         }
     }
 
-    // Fügt eine neue Kategorie hinzu, falls der Benutzer eine eingibt.
-    // Öffnet ein Prompt und gibt den neuen Kategorienamen (in Kleinbuchstaben) zurück,
-    // oder null, wenn keine gültige Eingabe erfolgt.
+    shareList(listId, participantName) {
+        if (confirm("Möchten Sie diese Liste wirklich mit " + participantName + " teilen?")) {
+            this.model.shareList(listId, participantName);
+            alert("Liste wurde geteilt mit " + participantName);
+        }
+    }
+
+    //////////////////
+    ////// ITEMS:
+    ////// -hinzufügen
+    ////// -löschen
+    ////// -bearbeiten
+    //////////////////
+
+    addEntry(listId, newItem) {
+        this.model.addItem(listId, newItem);
+    }
+
+    deleteItem(listId, itemIndex) {
+        this.model.deleteItem(listId, itemIndex);
+    }
+
+    updateItem(listId, itemId, updateData) {
+        this.model.updateItem(listId, itemId, updateData);
+    }
+
+    //////////////////
+    ////// neue Kategorie hinzufügen
+    //////////////////
+
     addCategory() {
         const newCategory = prompt("Bitte geben Sie die neue Kategorie ein:", "");
         if (newCategory && newCategory.trim() !== "") {
             const newCat = newCategory.trim().toLowerCase();
-            // Füge die Kategorie nur hinzu, wenn sie noch nicht existiert
-            if (!this.model.categories.includes(newCat)) {
-                this.model.categories.push(newCat);
-            }
+            this.model.addCategory(newCat);
             return newCat;
         }
         return null;
     }
-
-    // Controller-Methode zum Teilen einer Liste mit einem Teilnehmer
-    shareList(listId, participantName) {
-        // Optional: Bestätigung einholen
-        if (confirm("Möchten Sie diese Liste wirklich mit " + participantName + " teilen?")) {
-            console.log("Liste wird geteilt mit", participantName, "für Liste ID:", listId);
-            // Hier könntest du die Logik einbauen, um den Teilnehmer zur Liste hinzuzufügen.
-            // Beispiel: Finde die Liste und füge den Teilnehmer hinzu (wenn du IDs oder Objekte verwaltest):
-            const list = this.model.lists.find(l => l.id == listId);
-            if (list) {
-                // Hier ein Beispiel: Wenn du einfach den Namen speicherst, kannst du das so machen:
-                if (!list.participants) {
-                    list.participants = [];
-                }
-                // Füge den Teilnehmernamen hinzu, falls er noch nicht vorhanden ist
-                if (!list.participants.includes(participantName)) {
-                    list.participants.push(participantName);
-                }
-                alert("Liste wurde geteilt mit " + participantName);
-                this.model.notifyObservers();
-            } else {
-                console.error("Liste mit ID " + listId + " nicht gefunden!");
-            }
-        }
-    }
-
-
 }
