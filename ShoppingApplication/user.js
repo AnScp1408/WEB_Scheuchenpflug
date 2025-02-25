@@ -1,10 +1,10 @@
+// Repräsentiert Benutzerin
+// Speichert Infos wie Id, Name und e-mail
+// Verwaltet die Listen
+// Wichtig für spätere Zugriffsberechtigungen (owned oder shared List, wäre für spätere Implementierungen notwendig,
+// da vorgesehen ist, dass Listen nur von Admins gelöscht/umbenannt werden sollen)
+
 export class User {
-    /**
-     * Erstellt einen neuen Benutzer.
-     * @param {number} id - Eindeutige Benutzer-ID.
-     * @param {string} username - Benutzername.
-     * @param {string} email - E-Mail-Adresse des Benutzers.
-     */
     constructor(id, username, email) {
         this.id = id;                   // Eindeutige Benutzer-ID
         this.username = username;       // Benutzername
@@ -13,20 +13,14 @@ export class User {
         this.sharedLists = [];          // IDs der Listen, die mit diesem Benutzer geteilt wurden (optional)
     }
 
-    /**
-     * Fügt eine Liste zur Sammlung der Listen hinzu, die der Benutzer besitzt.
-     * @param {number} listId - ID der Liste.
-     */
+    // Fügt eine Liste zur Sammlung der Listen hinzu, die der Benutzer besitzt.
     addOwnedList(listId) {
         if (!this.ownedLists.includes(listId)) {
             this.ownedLists.push(listId);
         }
     }
 
-    /**
-     * Fügt eine Liste zur Sammlung der Listen hinzu, die mit dem Benutzer geteilt wurden.
-     * @param {number} listId - ID der Liste.
-     */
+    //Fügt eine Liste zur Sammlung der Listen hinzu, die mit der Benutzerin geteilt wurden.
     addSharedList(listId) {
         if (!this.sharedLists.includes(listId)) {
             this.sharedLists.push(listId);
