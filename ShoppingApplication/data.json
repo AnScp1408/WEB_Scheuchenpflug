@@ -73,7 +73,7 @@
         },
         {
           "id": 6,
-          "name": "Sojajoghurt",
+          "name": "Joghurt",
           "quantity": 2,
           "unit": "becher",
           "category": "milchalternativen",
@@ -92,7 +92,7 @@
       "items": [
         {
           "id": 4,
-          "name": "Mandelmilch",
+          "name": "Hafermilch",
           "quantity": 2,
           "unit": "liter",
           "category": "milchalternativen",
@@ -114,7 +114,7 @@
           "id": 7,
           "name": "Tofu",
           "quantity": 2,
-          "unit": "packungen",
+          "unit": "stück",
           "category": "fleischalternativen",
           "description": "Naturtofu",
           "completed": false,

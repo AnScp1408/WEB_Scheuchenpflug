@@ -23,6 +23,7 @@ export class Model {
     //////////////////
     ////// Observer hinzufügen (wird benachrichtigt, wenn sich Daten ändern)
     ////// Parameter observer, ist Objekt mit update() Methode
+    ////// jede view/controller kann sich mit addObserver() anmelden
     //////und
     ////// Observer benachrichtigen, wenn Daten ändern, mit Debug Ausgabe
     //////////////////
@@ -38,8 +39,9 @@ export class Model {
     }
 
     //////////////////
-    ////// Daten (z. B. aus einer JSON-Datei) laden, wird in main aufgerufen
+    ////// Daten (aus JSON-Datei) laden, wird in main aufgerufen
     ////// interner Zähler, weil die ID immer einzigartig bleiben muss
+    ////// sobald geladen, dann werden alle angemeldeten Observer informiert
     //////////////////
 
     loadData(data) {
