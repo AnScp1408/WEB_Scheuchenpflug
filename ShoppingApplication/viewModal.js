@@ -322,10 +322,6 @@ export class ViewModal {
             if (openItemsContainer.innerHTML.trim() === '') {
                 openItemsContainer.innerHTML = '<li class="list-group-item text-muted">Keine offenen Items</li>';
             }
-
-            // if (Object.keys(groupedItems).length === 0) {
-            //     openItemsContainer.innerHTML = '<li class="list-group-item text-muted">Keine offenen Items</li>';
-            // }
         } else {
             // Alphabetische Sortierung
             if (this.sortOrder === "asc") {
