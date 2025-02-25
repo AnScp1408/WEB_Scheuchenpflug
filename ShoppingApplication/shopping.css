@@ -102,11 +102,27 @@ h6{
 
 /* CSS-Klasse für die Lösch-Animation */
 .delete-animation {
-    transition: padding 2s ease, margin-left 2s ease, font-size 2s ease, opacity 2s ease;
+    transition: padding 0.5s ease, margin-left 0.5s ease, font-size 0.5s ease, opacity 0.5s ease;
     padding: 0 !important;
     margin-left: -10px !important;
     font-size: 0 !important;
     opacity: 0 !important;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    transform: translateX(-10px);
+}
+
+
+/* Verhindert Hintergrundänderung während der Animation */
+.delete-animation .delete-item {
+    background-color: transparent !important;
+    border-color: transparent !important;
+    color: black !important; /* Stellt sicher, dass das Icon sichtbar bleibt */
+}
+
+/* Verhindert Weißfärbung des Icons beim Klick */
+.delete-item i {
+    color: black !important; /* Icon bleibt schwarz */
+    transition: none;
 }
 
 /*------------------------*/
