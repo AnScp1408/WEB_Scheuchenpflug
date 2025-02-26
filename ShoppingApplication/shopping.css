@@ -11,10 +11,30 @@ h6{
 }
 
 /*------------------------*/
+/* Fixed Logo Styling */
+/*------------------------*/
+.fixed-logo {
+    position: fixed; /* Fixiert es an einer festen Position */
+    bottom: 20px; /* Abstand zum unteren Rand */
+    left: 50%; /* Zentriert es horizontal */
+    transform: translateX(-50%); /* Exakte Zentrierung */
+    width: 150px; /* Standardgröße */
+    max-width: 80%; /* Skalierung, um Überlauf zu verhindern */
+    z-index: 1000; /* Hält es über allen anderen Elementen */
+}
+
+/*------------------------*/
 /*Responsive Anpassungen - Mobil First*/
 /*------------------------*/
 h1 {
     font-size: 1.5rem;
+    color: #FF8C00;
+    font-weight: bolder;
+}
+
+h2{
+    margin-top: 10px;
+    font-weight: bold;
 }
 
 .btn {
@@ -25,13 +45,13 @@ h1 {
     grid-template-columns: 1fr;
 }
 
-/* Kleinere Options in den Selects */
-#entryCategory option,
-#entryUnit option {
-    font-size: 0.8rem;
-    padding: 2px 4px;
-    line-height: 1;
+/* Mini-Logo neben "Meine Listen" */
+.mini-logo {
+    width: 80px; /* Größe des Logos */
+    height: auto;
+    margin-right: 10px; /* Abstand zum Text */
 }
+
 
 /*------------------------*/
 /*Responsive Anpassungen - Tablet*/
