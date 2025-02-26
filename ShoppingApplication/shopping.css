@@ -11,9 +11,32 @@ h6{
 }
 
 /*------------------------*/
-/*Responsive Anpassungen*/
+/*Responsive Anpassungen - Mobil First*/
 /*------------------------*/
-@media (max-width: 768px) {
+h1 {
+    font-size: 1.5rem;
+}
+
+.btn {
+    width: 100%;
+}
+
+.grid-container {
+    grid-template-columns: 1fr;
+}
+
+/* Kleinere Options in den Selects */
+#entryCategory option,
+#entryUnit option {
+    font-size: 0.8rem;
+    padding: 2px 4px;
+    line-height: 1;
+}
+
+/*------------------------*/
+/*Responsive Anpassungen - Tablet*/
+/*------------------------*/
+@media (max-width: 767px) {
     h1 {
         font-size: 1.8rem;
     }
@@ -25,22 +48,19 @@ h6{
         margin: auto;
     }
 }
-@media (max-width: 576px) {
+
+/*------------------------*/
+/*Responsive Anpassungen - Desktop*/
+/*------------------------*/
+@media (min-width: 768px) {
     h1 {
-        font-size: 1.5rem;
-    }
-    .btn {
-        width: 100%;
+        font-size: 2rem;
     }
     .grid-container {
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     }
-    /* Kleinere Options in den Selects */
-    #entryCategory option,
-    #entryUnit option{
-        font-size: 0.8rem;
-        padding: 2px 4px;
-        line-height: 1;
+    .modal-content {
+        width: 70%;
     }
 }
 
@@ -50,7 +70,10 @@ h6{
 .grid-container {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 4rem;
+    gap: 2rem;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
 }
 
 /*------------------------*/
@@ -62,11 +85,16 @@ h6{
     z-index: 1;
     position: relative; /* Wichtig für Pseudo-Elemente */
     overflow: visible;  /* Damit sowohl der animierte Balken als auch Dropdowns nicht abgeschnitten werden */
+    width: 100%;
 }
 
 .card:hover {
     transform: translateY(-5px);
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.col-12, .col-md-6, .col-lg-4 {
+    width: 100% !important;
 }
 
 /*------------------------*/
@@ -97,32 +125,34 @@ h6{
     }
 }
 .modal-content {
-    animation: modalSlideDown 0.4s ease-out;
+    animation-name: modalSlideDown;
+    animation-duration: 0.4s;
+    animation-timing-function: ease-out;
 }
 
-/* CSS-Klasse für die Lösch-Animation */
-.delete-animation {
-    transition: padding 0.5s ease, margin-left 0.5s ease, font-size 0.5s ease, opacity 0.5s ease;
-    padding: 0 !important;
-    margin-left: -10px !important;
-    font-size: 0 !important;
-    opacity: 0 !important;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    transform: translateX(-10px);
+/*------------------------*/
+/* Lösch Animation */
+/*------------------------*/
+@keyframes swipeOutLeft {
+    0% {
+        transform: translateX(0);
+        opacity: 1;
+    }
+    100% {
+        transform: translateX(-100%); /* Nach links statt nach rechts */
+        opacity: 0;
+    }
 }
 
-
-/* Verhindert Hintergrundänderung während der Animation */
-.delete-animation .delete-item {
-    background-color: transparent !important;
-    border-color: transparent !important;
-    color: black !important; /* Stellt sicher, dass das Icon sichtbar bleibt */
+/* Neue Klasse für die Löschanimation */
+.swipe-out {
+    animation: swipeOutLeft 0.5s ease-out forwards;
 }
 
-/* Verhindert Weißfärbung des Icons beim Klick */
 .delete-item i {
-    color: black !important; /* Icon bleibt schwarz */
+    color: black !important;
     transition: none;
+    pointer-events: none; /* Verhindert jegliche Interaktionen mit dem Icon selbst */
 }
 
 /*------------------------*/
@@ -140,7 +170,7 @@ h6{
 .animate-btn:hover,
 .btn:hover,
 .btn-link:hover {
-    transform: scale(1.05);
+    transform: scale(1.01);
     background-color: #FF8C00; /* etwas dunkleres Orange */
     border-color: #FF8C00;
 }
@@ -150,14 +180,18 @@ h6{
 /*------------------------*/
 .btn-outline-warning, .btn-outline-danger {
     background-color: transparent !important;
+    transform: scale(1.03);
     color: black;
     border: 1px solid #FFA500 !important;
+    transition: background-color 0.2s ease-in-out, transform 0.2s ease-in-out, box-shadow 0.2s;
 }
 
 .btn-outline-warning:hover, .btn-outline-danger:hover {
     background-color: transparent !important;
+    transform: scale(1.03);
     color: black;
     border-color: #FF8C00 !important;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.15);
 }
 
 /*------------------------*/
