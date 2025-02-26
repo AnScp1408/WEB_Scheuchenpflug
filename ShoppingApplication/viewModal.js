@@ -427,21 +427,19 @@ export class ViewModal {
 
         // Löschen-Event
         listItem.querySelector(".delete-item").addEventListener("click", () => {
-            // Bestätigungsabfrage – nur hier
             if (confirm("Möchtest du diesen Artikel wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.")) {
-                // Rufe zuerst die Controller-Methode auf, um den Datensatz zu löschen
-                this.controller.deleteItem(this.currentList.id, index);
-
-                // Danach starte die Animation für das DOM-Element
-                listItem.classList.add("delete-animation");
-
-                // Sobald die Transition endet, aktualisiere die Ansicht
-                listItem.addEventListener("transitionend", function handler() {
-                    listItem.removeEventListener("transitionend", handler);
+                listItem.classList.add("swipe-out");
+                // Warte auf das Ende der Animation, um das Element aus der Liste zu entfernen
+                listItem.addEventListener("animationend", function handler() {
+                    listItem.removeEventListener("animationend", handler);
+                    // Lösche den Artikel aus dem Model
+                    this.controller.deleteItem(this.currentList.id, index);
+                    // Aktualisiere die Anzeige nach dem Entfernen
                     this.renderItems();
-                }.bind(this));
+                }.bind(this)); //Event nur einmal
             }
         });
+
 
 
         // Speichern-Event
