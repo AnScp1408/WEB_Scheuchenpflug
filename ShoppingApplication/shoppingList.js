@@ -1,5 +1,5 @@
 // Repräsentiert komplette Einkaufsliste
-// Enthält Attribute wie: id, Name, ownerId, items, aktiv oder abgeschlossen, Teilnehmende)
+// Enthält Attribute: id, Name, ownerId, items, aktiv oder abgeschlossen, Array mit Teilnehmende)
 // Ermöglicht das Verwalten von Listen
 
 export class ShoppingList {

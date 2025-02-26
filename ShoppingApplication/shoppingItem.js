@@ -1,4 +1,4 @@
-// Repäsentiert einzelne Artikel innerhalb Liste
+// Repräsentiert einzelne Artikel innerhalb Liste
 // enthält die Eigenschaften eines Artikels (Name, Menge, Einheit, Kategorie, Beschreibung, checked oder unchecked (boolean))
 // jeder Artikel bleibt eindeutig identifizierbar und bearbeitbar
 

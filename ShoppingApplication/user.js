@@ -1,5 +1,5 @@
 // Repräsentiert Benutzerin
-// Speichert Infos wie Id, Name und e-mail
+// Speichert Infos wie Id, Name und E-mail
 // Verwaltet die Listen
 // Wichtig für spätere Zugriffsberechtigungen (owned oder shared List, wäre für spätere Implementierungen notwendig,
 // da vorgesehen ist, dass Listen nur von Admins gelöscht/umbenannt werden sollen)
