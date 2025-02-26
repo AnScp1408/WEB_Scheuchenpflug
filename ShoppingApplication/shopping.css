@@ -192,23 +192,24 @@ h1 {
     color: black;
     border-color: #FF8C00 !important;
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.15);
+
 }
 
 /*------------------------*/
 /* Abgeschlossene Listen Styling*/
 /*------------------------*/
-#listContainercompleted .card .animate-btn,
 #listContainercompleted .card .btn,
 #listContainercompleted .card .btn-link {
     background-color: #28a745;
     border: 1px solid #28a745;
     color: #000;
+    transition: transform 0.15s ease-in-out, background-color 0.2s;
 }
 
 #listContainercompleted .card .animate-btn:hover,
 #listContainercompleted .card .btn:hover,
 #listContainercompleted .card .btn-link:hover {
-    transform: scale(1.05);
+    transform: scale(1.01);
     background-color: #218838; /* dunkleres Grün */
     border-color: #218838;
 }
