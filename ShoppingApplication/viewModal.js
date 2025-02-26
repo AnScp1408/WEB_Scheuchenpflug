@@ -234,13 +234,13 @@ export class ViewModal {
         document.getElementById('itemName').addEventListener('change', function () {
             const enteredItem = this.value.trim();
             const frequentDefaults = {
-                "Nudeln": { unit: "kg", category: "sonstiges" },
-                "Reis": { unit: "kg", category: "sonstiges" },
-                "Hafermilch": { unit: "liter", category: "milchalternativen" },
-                "Tofu": { unit: "dag", category: "fleischalternativen" },
-                "Tomaten": { unit: "stück", category: "gemuese" },
-                "Paprika": { unit: "stück", category: "gemuese" },
-                "Banane": { unit: "stück", category: "obst" }
+                "Nudeln": {unit: "kg", category: "sonstiges"},
+                "Reis": {unit: "kg", category: "sonstiges"},
+                "Hafermilch": {unit: "liter", category: "milchalternativen"},
+                "Tofu": {unit: "dag", category: "fleischalternativen"},
+                "Tomaten": {unit: "stück", category: "gemuese"},
+                "Paprika": {unit: "stück", category: "gemuese"},
+                "Banane": {unit: "stück", category: "obst"}
             };
             // Nur setzen, wenn ein Eintrag in den Defaults existiert:
             if (frequentDefaults[enteredItem]) {
@@ -441,7 +441,6 @@ export class ViewModal {
         });
 
 
-
         // Speichern-Event
         listItem.querySelector(".save-edit").addEventListener("click", () => {
             const editedName = listItem.querySelector(".edit-name").value;
@@ -459,7 +458,7 @@ export class ViewModal {
             const collapseEl = listItem.querySelector(`#editForm-${index}`);
             let bsCollapse = bootstrap.Collapse.getInstance(collapseEl);
             if (!bsCollapse) {
-                bsCollapse = new bootstrap.Collapse(collapseEl, { toggle: false });
+                bsCollapse = new bootstrap.Collapse(collapseEl, {toggle: false});
             }
             bsCollapse.hide();
 
