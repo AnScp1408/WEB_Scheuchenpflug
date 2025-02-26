@@ -96,7 +96,7 @@ export class View {
             if (target.classList.contains('participants-list')) {
                 const listId = target.getAttribute('data-id');
                 // Öffne ein Prompt, in dem der Benutzer den Vornamen eingeben kann
-                const participantName = prompt("Liste teilen mit: (Vorname eingeben)");
+                const participantName = prompt("Liste teilen mit:");
                 if (participantName && participantName.trim() !== "") {
                     // Delegiere die Logik an den Controller
                     this.controller.shareList(listId, participantName.trim());
